@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Accordion from "../../Common/Accordion";
 import Loading from "../../Common/Loading";
 import { Link } from "react-router-dom";
+import baseUrl from "../../BaseUrl/baseUrl";
 
 const Home = () => {
   const [search, setSearch] = useState("");
@@ -13,7 +14,7 @@ const Home = () => {
     queryKey : ["products"],
     mutationFn : async () => {
        try {
-        const response = await fetch("http://localhost:5000/api/product",{
+        const response = await fetch(`${baseUrl}/api/product`,{
           method : "GET",
           credentials : "include",
           headers : {
