@@ -1,2 +1,2 @@
-const baseUrl = "http://localhost:5000";
+const baseUrl = "https://vegetable-hvpn.onrender.com";
 export default baseUrl;
