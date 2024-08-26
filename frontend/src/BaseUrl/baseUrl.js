@@ -1,2 +1,2 @@
-const baseUrl = "https://vegetable-hvpn.onrender.com/";
+const baseUrl = "https://vegetable-hvpn.onrender.com";
 export default baseUrl;
