@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Accordion from "../../Common/Accordion";
 import Loading from "../../Common/Loading";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState([]);
 
+  const queryClient = useQueryClient();
   const {mutate:getAllProducts,isPending} = useMutation({
     queryKey : ["products"],
     mutationFn : async () => {
@@ -27,6 +29,13 @@ const Home = () => {
        } catch (error) {
         throw new Error(error);
        }
+    },
+    onSuccess :()=>{
+      Promise.all([
+        queryClient.invalidateQueries({queryKey : ["addProduct"]}),
+        queryClient.invalidateQueries({queryKey : ["updateProduct"]}),
+        queryClient.invalidateQueries({queryKey : ["deleteProduct"]}),
+      ])
     }
   });
 
@@ -38,6 +47,7 @@ const Home = () => {
 
   return (
     <div className="flex justify-center items-center join join-vertical">
+      <div className="flex flex-row">
       <div className="m-5" >
       <label className="input input-bordered flex items-center gap-2">
         <input type="text" className="grow w-64" placeholder="Search" value={search} onChange={(e)=>{setSearch(e.target.value)}} />
@@ -55,7 +65,11 @@ const Home = () => {
         </svg>
       </label>
       </div>
-      
+      <div className="m-5" >
+        <Link to="/new" className="btn btn-primary">Add Product</Link>
+      </div>
+      </div>
+      {products.length === 0  && <h1 className="text-2xl text-center">Add New Product</h1> }
       {isPending ? <Loading/> : 
        <Accordion products={products.filter( (product)=>product?.name.toLowerCase().includes(search.toLowerCase()))}/>}
     </div>

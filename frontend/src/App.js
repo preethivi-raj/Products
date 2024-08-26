@@ -8,6 +8,8 @@ import baseUrl from "./BaseUrl/baseUrl";
 import { Navigate } from 'react-router-dom';
 import Loading from "./Common/Loading";
 import Header from './Common/Header';
+import Update from './Pages/Update/Update';
+import Add from './Pages/Add/Add';
 
 const App = () => {
   const {data : authUser , isLoading}= useQuery({
@@ -45,6 +47,8 @@ const App = () => {
         <Route path="/" element={authUser?<Home/> : <Navigate to="/login"/>} />
         <Route path="/signup" element={!authUser?<Signup /> : <Navigate to="/"/>} />
         <Route path="/login" element={!authUser ?<Signin />:<Navigate to="/"/> } />
+        <Route path="/edit/:id" element={<Update />} />
+        <Route path="/new" element={<Add />} />
       </Routes>
       <Toaster />
     </div>

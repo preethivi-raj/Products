@@ -1,11 +1,14 @@
 import React from "react";
-import { MdDelete } from "react-icons/md";
 import { useMutation,useQueryClient } from "@tanstack/react-query";
 import baseUrl from "../BaseUrl/baseUrl";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { formatDate } from "../Hook/formatDate";
 const Accordion = ({ products }) => {
-
+   
     const queryClient = useQueryClient();  
     const {mutate:deleteProduct} = useMutation({
+      queryKey : ['deleteProduct'],
         mutationFn : async (id)=>{
             try {
                 const response = await fetch(`${baseUrl}/api/product/delete/${id}`,{
@@ -25,7 +28,9 @@ const Accordion = ({ products }) => {
             }
         },
         onSuccess : ()=>{
+            toast.success('Product Deleted Successfully')
             queryClient.invalidateQueries({queryKey : ["products"]})
+            window.location.href = '/'
         }
     });
 
@@ -39,9 +44,14 @@ const Accordion = ({ products }) => {
         <div key={product._id}>
           <div className="join join-vertical p-2 w-full min-w-96">
             <div className="collapse collapse-arrow join-item border-base-300 border">
+            <div className="flex flex-row">
             <div className="m-2">
-                < MdDelete className="w-12 btn btn-sm hover:cursor-pointer" onClick={()=>handleDelete(product?._id)}/>
+                < button className="w-12 btn btn-sm hover:cursor-pointer" onClick={()=>handleDelete(product?._id)}>Delete</button>
                 </div>
+            <div className="m-2">
+               <Link to={`/edit/${product?._id}`} className="w-12 p-1 btn btn-sm  text-smhover:cursor-pointer" >Update</Link>
+                </div>
+            </div>
               <input type="radio" name="my-accordion-4"  />
               <div className="collapse-title text-xl font-medium uppercase">
                 {product?.name}
@@ -76,12 +86,12 @@ const Accordion = ({ products }) => {
                       <tr>
                         <th>4</th>
                         <td>CreateAt</td>
-                        <td>{product?.createdAt}</td>
+                        <td>{formatDate(product?.createdAt)}</td>
                       </tr>
                       <tr>
                         <th>5</th>
-                        <td>CreateAt</td>
-                        <td>{product?.updatedAt}</td>
+                        <td>UpdatedAt</td>
+                        <td>{formatDate(product?.updatedAt)}</td>
                       </tr>
                     </tbody>
                   </table>

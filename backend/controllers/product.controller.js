@@ -80,6 +80,40 @@ export const deleteProduct = async (req, res) => {
 }
 
 export const updateProduct = async (req, res) => {
+    try{
+        const {id} = req.params;
+
+        if(!id) {
+            return res.status(400).json({ message: "Product ID not found" });
+        }
+
+        const product = await Product.findById({_id:id});
+
+        if(!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        const {  price, weight, category } = req.body;
+
+        product.price = price || product.price;
+        product.weight = weight || product.weight;
+        product.category = category || product.category;
+        
+        const updatedProduct = await product.save();
+
+        if(!updatedProduct) {
+            return res.status(400).json({ message: "Product not updated" });
+        }
+
+        res.status(200).json({ success :true ,message: "Product updated successfully" });
+    }
+    catch (error) {
+        console.log(`Error in update product controller: ${error}`);
+        res.status(500).json({ message: "Server Error" });
+    }
+}
+
+export const getProduct = async (req, res) => {
     try {
         const id = req.params.id;
 
@@ -93,22 +127,10 @@ export const updateProduct = async (req, res) => {
             return res.status(404).json({ message: "Product not found" });
         }
 
-        const { name, price, weight, category } = req.body;
-
-        if(!name || !price || !weight || !category) {
-            return res.status(400).json({ message: "Please fill all fields" });
-        }
-
-        const updatedProduct = await Product.findByIdAndUpdate({_id:id}, { name, price, weight, category }, { new: true });
-
-        if(!updatedProduct) {
-            return res.status(400).json({ message: "Product not updated" });
-        }
-
-        res.status(200).json(updatedProduct);
+        res.status(200).json(product);
         
     } catch (error) {
-        console.log(`Error in update product controller: ${error}`);
+        console.log(`Error in get product controller: ${error}`);
         res.status(500).json({ message: "Server Error" });
     }
 }
