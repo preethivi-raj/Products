@@ -49,7 +49,7 @@ const Home = () => {
   return (
     <div className="flex justify-center items-center join join-vertical">
       <div className="flex flex-row">
-      <div className="m-5" >
+      <div className="mb-2" >
       <label className="input input-bordered flex items-center gap-2">
         <input type="text" className="grow w-64" placeholder="Search" value={search} onChange={(e)=>{setSearch(e.target.value)}} />
         <svg
@@ -66,13 +66,13 @@ const Home = () => {
         </svg>
       </label>
       </div>
-      <div className="m-5" >
+      <div className="pl-2"  >
         <Link to="/new" className="btn btn-primary">Add Product</Link>
       </div>
       </div>
       {products.length === 0  && <h1 className="text-2xl text-center">Add New Product</h1> }
       {isPending ? <Loading/> : 
-       <Accordion products={products.filter( (product)=>product?.name.toLowerCase().includes(search.toLowerCase()))}/>}
+       <Accordion products={products.filter((product)=>product?.name.toLowerCase().toLowerCase().includes(search.toLowerCase()))}/>}
     </div>
   );
 };
